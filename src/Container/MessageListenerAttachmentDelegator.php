@@ -13,6 +13,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 use function get_debug_type;
+use function gettype;
 use function is_object;
 use function sprintf;
 
@@ -37,13 +38,12 @@ class MessageListenerAttachmentDelegator
      */
     public function __invoke(ContainerInterface $container, string $serviceName, callable $callback): EventManagerInterface
     {
-        /** call __invoke on the mapped EventManagerFactory class */
         $eventManager = $callback();
         if (! $eventManager instanceof EventManager) {
             throw new Exception\InvalidServiceException(sprintf(
                 'Delegator factory %s cannot operate on a %s; please map it only to the %s service',
                 self::class,
-                is_object($eventManager) ? $eventManager::class . ' instance' : get_debug_type($eventManager),
+                is_object($eventManager) ? $eventManager::class . ' instance' : gettype($eventManager),
                 EventManager::class
             ));
         }
