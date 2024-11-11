@@ -10,8 +10,9 @@ use Webmozart\Assert\Assert;
 
 class MessageEvent extends Event
 {
-    public final const EVENT_UI_MESSAGE                 = 'uiMessage';
-    public final const EVENT_EMAIL_MESSAGE              = 'emailMessage';
+    public final const EVENT_EMAIL_MESSAGE = 'emailMessage';
+
+    public bool $notify = false;
 
     public function setTarget($target)
     {
@@ -21,5 +22,28 @@ class MessageEvent extends Event
             '$target must be an instance of: ' . UserInterface::class
         );
         $this->target = $target;
+    }
+
+    public function setNotify(bool $notify = false): void
+    {
+        if ($notify) {
+            $this->notify = $notify;
+        }
+    }
+
+    public function getNotify(): bool
+    {
+        return $this->notify;
+    }
+
+    public function setNotificationBody(string $body): void
+    {
+        $this->setNotify(true);
+        $this->setParam('notificationBody', $body);
+    }
+
+    public function getNotificationBody(): ?string
+    {
+        return $this->getParam('notificationBody');
     }
 }
